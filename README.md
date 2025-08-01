@@ -1,13 +1,24 @@
-
-## Runtime Path
-```mermaid
+%% cleaner sizing + fonts for GitHub
+%%{init: {
+  "theme": "neutral",
+  "sequence": {
+    "useMaxWidth": true,
+    "mirrorActors": false,
+    "rightAngles": true,
+    "actorMargin": 20,
+    "messageMargin": 12,
+    "noteMargin": 10,
+    "bottomMarginAdj": 6,
+    "showSequenceNumbers": true
+  }
+}}%%
 sequenceDiagram
   autonumber
   actor U as User
   participant R as Router/Tools
   participant Q as Query Understanding
   participant P as Planner & Retrieval
-  participant IDX as Indexes (Vector/Keyword)
+  participant IDX as Indexes<br/>(Vector/Keyword)
   participant CB as Context Builder
   participant L as LLM
   participant G as Guardrails
@@ -23,16 +34,14 @@ sequenceDiagram
   P->>CB: Top-k after re-rank
   CB->>L: Prompt + grounded context
   L-->>G: Draft answer
-  G-->>R: Validate (PII/schema/safety)
+  G-->>R: Validate (PII / schema / safety)
   R-->>U: Response
 
-  par Telemetry
-    Note over O: Trace id, candidates (hashed), policy decisions,<br/>grounding%, latency/cost
-    R-)O: Spans/metrics
-    P-)O: Retrieval metrics
-    L-)O: Generation metrics
-  end
+  Note over O: Trace id, candidates (hashed), policy decisions,<br/>grounding%, latency/cost
+  R-->>O: Spans / metrics
+  P-->>O: Retrieval metrics
+  L-->>O: Generation metrics
 
-  U-->>F: Rating/clicks
-  F-)IDX: Re-embed / Invalidate
-  F-)R: Canary gate on regressions
+  U-->>F: Rating / clicks
+  F-->>IDX: Re-embed / Invalidate
+  F-->>R: Canary gate on regressions
